@@ -1,9 +1,18 @@
 server:
-  port: 6001
+  port: ${port:6001}
   tomcat:
     uri-encoding: UTF-8
     max-swallow-size: -1    # tomcat默认大小2M，超过2M的文件不会被捕获，需要调整此处大小为100MB或者-1即可
 
 spring:
+  application:
+    name: company-service
   profiles:
     active: dev
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  global-config:
+    db-config:
+      id-type: ASSIGN_UUID
+    banner: false

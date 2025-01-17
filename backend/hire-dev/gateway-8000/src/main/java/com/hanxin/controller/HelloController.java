@@ -1,16 +1,15 @@
 package com.hanxin.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("c")
+@RequestMapping("gateway")
 public class HelloController {
 
-    @GetMapping("company")
+    @GetMapping("hello")
     public Object company() {
-        return "Hello JSON!";
+        return "Hello gateway!";
     }
 }
