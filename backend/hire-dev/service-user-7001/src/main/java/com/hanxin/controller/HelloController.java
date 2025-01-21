@@ -1,6 +1,8 @@
 package com.hanxin.controller;
 
 import com.hanxin.service.StuService;
+import com.hanxin.util.SMSUtils;
+import com.hanxin.util.SendEmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,19 @@ public class HelloController {
 
     @Autowired
     private StuService stuService;
+
+    @Autowired
+    private SMSUtils smsUtils;
+
+    @Autowired
+    private SendEmailUtils sendEmailUtils;
+
+    @GetMapping("sms")
+    public Object sms() throws Exception {
+        //smsUtils.sendSMS("13691193614", "9999");
+        sendEmailUtils.SendEmail();
+        return "send SMS OK!";
+    }
 
     @Value("${server.port}")
     private String port;

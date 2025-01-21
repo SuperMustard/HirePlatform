@@ -14,5 +14,5 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
   global-config:
     db-config:
-      id-type: ASSIGN_UUID
+      id-type: assign_id
     banner: false
