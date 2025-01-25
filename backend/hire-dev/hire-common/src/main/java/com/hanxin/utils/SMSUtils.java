@@ -1,4 +1,4 @@
-package com.hanxin.util;
+package com.hanxin.utils;
 
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;

@@ -1,4 +1,4 @@
-package com.hanxin.util;
+package com.hanxin.utils;
 
 import com.azure.communication.email.EmailClient;
 import com.azure.communication.email.EmailClientBuilder;
@@ -17,12 +17,12 @@ public class SendEmailUtils {
     @Autowired
     private AzureEmailProperties azureEmailProperties;
 
-    public void SendEmail() {
+    public void SendEmail(String emailAddress, String validCode) {
         String connectionString = "endpoint=" + azureEmailProperties.getEndPoint() + ";accesskey=" + azureEmailProperties.getAccessKey();
 
         EmailClient emailClient = new EmailClientBuilder().connectionString(connectionString).buildClient();
 
-        EmailAddress toAddress = new EmailAddress("hanxin1101@outlook.com");
+        EmailAddress toAddress = new EmailAddress(emailAddress);
 
 
 
@@ -30,7 +30,7 @@ public class SendEmailUtils {
                 .setSenderAddress("DoNotReply@ab03d2b4-ca3b-4d3c-8661-f275ea275acf.azurecomm.net")
                 .setToRecipients(toAddress)
                 .setSubject("测试电子邮件")
-                .setBodyPlainText("通过电子邮件向世界问好。");
+                .setBodyPlainText("您的验证码是: " + validCode);
 
 
 
