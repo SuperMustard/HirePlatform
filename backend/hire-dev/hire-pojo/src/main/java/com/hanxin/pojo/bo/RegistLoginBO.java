@@ -14,9 +14,9 @@ import javax.validation.constraints.NotBlank;
 public class RegistLoginBO {
 
     @NotBlank(message = "email can't be null")
-    private String email;
+    private String mobile;
     @NotBlank(message = "code can't be null")
-    private String code;
+    private String smsCode;
 
 
 }

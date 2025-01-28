@@ -41,15 +41,24 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         return user;
     }
 
+    @Override
+    public Users queryMobileIsExist(String mobile) {
+
+        Users user = usersMapper.selectOne(new QueryWrapper<Users>()
+                .eq("mobile", mobile));
+
+        return user;
+    }
+
     @Transactional
     @Override
-    public Users createUsers(String email) {
+    public Users createUsers(String mobile) {
 
         Users user = new Users();
 
-        user.setEmail(email);
-        user.setMobile("13123193614");
-        user.setNickname("白雪女王" + DesensitizationUtil.commonDisplay("13123193614"));
+        user.setEmail("");
+        user.setMobile(mobile);
+        user.setNickname("白雪女王" + DesensitizationUtil.commonDisplay(mobile));
         user.setRealName("白雪");
         user.setShowWhichName(ShowWhichName.nickname.type);
 

@@ -14,5 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UsersService extends IService<Users> {
     public Users queryEmailIsExist(String email);
 
+    public Users queryMobileIsExist(String mobile);
+
     public Users createUsers(String email);
 }

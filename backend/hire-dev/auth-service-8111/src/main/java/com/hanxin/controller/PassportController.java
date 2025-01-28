@@ -58,29 +58,53 @@ public class PassportController extends BaseInfoProperties {
         return CustomJSONResult.ok();
     }
 
+    @PostMapping("getSMSCode")
+    public CustomJSONResult getSMSCode(String mobile, HttpServletRequest request) {
+        if (StringUtil.isNullOrEmpty(mobile)) {
+            return CustomJSONResult.error();
+        }
+
+        //using ip address to limit code sending times
+        String userIp = IPUtil.getRequestIp(request);
+
+        log.info(userIp);
+        redis.setnx60s(MOBILE_SMSCODE + ":" + userIp, mobile);
+
+        String code = (int)((Math.random() * 9 + 1) * 100000) + "";
+//        sendEmailUtils.SendEmail(email, code);
+        log.info("SMS Code is: " + code);
+//
+        // store code into redis
+        log.info(MOBILE_SMSCODE + ":" + mobile);
+        redis.set(MOBILE_SMSCODE + ":" + mobile, code, 30 * 60);
+
+        return CustomJSONResult.ok();
+    }
+
     @PostMapping("login")
     public CustomJSONResult login(@Valid @RequestBody RegistLoginBO registLoginBO, HttpServletRequest request) {
-        String code = registLoginBO.getCode();
-        String email = registLoginBO.getEmail();
+        String code = registLoginBO.getSmsCode();
+        String mobile = registLoginBO.getMobile();
 
-        log.info(EMAIL_CODE + ":" + email);
-        String redisCode = redis.get(EMAIL_CODE + ":" + email);
+        log.info( MOBILE_SMSCODE + ":" + mobile);
+        String redisCode = redis.get(MOBILE_SMSCODE + ":" + mobile);
         if (StringUtils.isBlank(redisCode) || !redisCode.equalsIgnoreCase(code)) {
             return CustomJSONResult.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
         }
 
-        Users user = usersService.queryEmailIsExist(email);
+        Users user = usersService.queryMobileIsExist(mobile);
         if (user == null) {
-            user = usersService.createUsers(email);
+            user = usersService.createUsers(mobile);
         }
 
         //save user token into redis
 //        String uToken = TOKEN_USER_PREFIX + SYMBOL_DOT + UUID.randomUUID().toString();
 //        redis.set(REDIS_USER_TOKEN + ":" + user.getId(), uToken);
 
-        String jwt = jwtUtils.createJWTWithPrefix(new Gson().toJson(user), 1000L, TOKEN_USER_PREFIX);
+        //String jwt = jwtUtils.createJWTWithPrefix(new Gson().toJson(user), 3600000L, TOKEN_USER_PREFIX);
+        String jwt = jwtUtils.createJWTWithPrefix(new Gson().toJson(user), TOKEN_USER_PREFIX);
 
-        redis.del(EMAIL_CODE + ":" + email);
+        redis.del(MOBILE_SMSCODE + ":" + mobile);
 
         UsersVO usersVO = new UsersVO();
         BeanUtils.copyProperties(user, usersVO);
@@ -94,7 +118,7 @@ public class PassportController extends BaseInfoProperties {
                                   HttpServletRequest request) throws Exception {
 
         // 后端只需要清除用户的token信息即可，前端也需要清除相关的用户信息
-        redis.del(REDIS_USER_TOKEN + ":" + userId);
+        //redis.del(REDIS_USER_TOKEN + ":" + userId);
 
         return CustomJSONResult.ok();
     }
