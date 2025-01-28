@@ -58,8 +58,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
         user.setEmail("");
         user.setMobile(mobile);
-        user.setNickname("白雪女王" + DesensitizationUtil.commonDisplay(mobile));
-        user.setRealName("白雪");
+        user.setNickname("用户" + DesensitizationUtil.commonDisplay(mobile));
+        user.setRealName("测试");
         user.setShowWhichName(ShowWhichName.nickname.type);
 
 
@@ -74,11 +74,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         user.setProvince("");
         user.setCity("");
         user.setDistrict("");
-        user.setDescription("招收贱狗");
+        user.setDescription("努力生存");
 
         // 我参加工作的日期，默认使用注册当天的日期
         user.setStartWorkDate(LocalDate.now());
-        user.setPosition("SM女王");
+        user.setPosition("开心程序员");
         user.setRole(UserRole.CANDIDATE.type);
         user.setHrInWhichCompanyId("");
 

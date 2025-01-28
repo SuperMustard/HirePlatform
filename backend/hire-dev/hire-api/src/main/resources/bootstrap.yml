@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.2.201:8848
+        file-extension: yaml
+        extension-configs:
+          - data-id: jwt_config.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+
