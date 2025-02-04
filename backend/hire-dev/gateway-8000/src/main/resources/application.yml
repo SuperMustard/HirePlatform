@@ -9,3 +9,8 @@ spring:
     name: gateway
   profiles:
     active: dev
+
+blackIP:
+  continueCounts: ${counts:3}
+  timeInterval: ${interval:20}
+  limitTimes: ${times:30}

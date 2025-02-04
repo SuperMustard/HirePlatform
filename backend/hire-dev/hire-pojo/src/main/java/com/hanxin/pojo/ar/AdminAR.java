@@ -1,19 +1,13 @@
-package com.hanxin.pojo;
+package com.hanxin.pojo.ar;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
-import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-/**
- * <p>
- * 慕聘网运营管理系统的admin账户表，仅登录，不提供注册
- * </p>
- *
- * @author hanxin
- * @since 2025-01-08
- */
-public class Admin implements Serializable {
+@TableName("admin")
+public class AdminAR extends Model<AdminAR> {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,13 +21,11 @@ public class Admin implements Serializable {
     /**
      * 密码
      */
-    @JsonIgnore
     private String password;
 
     /**
      * 用户混合加密的盐
      */
-    @JsonIgnore
     private String slat;
 
     /**
@@ -116,16 +108,22 @@ public class Admin implements Serializable {
     }
 
     @Override
+    public Serializable pkVal() {
+        return this.id;
+    }
+
+    @Override
     public String toString() {
-        return "Admin{" +
-        "id=" + id +
-        ", username=" + username +
-        ", password=" + password +
-        ", slat=" + slat +
-        ", remark=" + remark +
-        ", face=" + face +
-        ", createTime=" + createTime +
-        ", updatedTime=" + updatedTime +
-        "}";
+        return "AdminAR{" +
+                "id=" + id +
+                ", username=" + username +
+                ", password=" + password +
+                ", slat=" + slat +
+                ", remark=" + remark +
+                ", face=" + face +
+                ", createTime=" + createTime +
+                ", updatedTime=" + updatedTime +
+                "}";
     }
 }
+

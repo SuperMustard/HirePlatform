@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -133,6 +134,16 @@ public class SaasPassportController extends BaseInfoProperties {
                 redis.set(REDIS_SAAS_USER_INFO + ":temp:" + preToken, new Gson().toJson(hrUser),5*60);
             }
         }
+
+        return CustomJSONResult.ok();
+    }
+
+    @PostMapping("logout")
+    public CustomJSONResult logout(@RequestParam String userId,
+                                   HttpServletRequest request) throws Exception {
+
+        // 后端只需要清除用户的token信息即可，前端也需要清除相关的用户信息
+        //redis.del(REDIS_USER_TOKEN + ":" + userId);
 
         return CustomJSONResult.ok();
     }
