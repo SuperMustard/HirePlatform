@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/auth-service-8111/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway-8000/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hire-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hire-api/src/main/resources" charset="UTF-8" />
@@ -8,8 +9,11 @@
     <file url="file://$PROJECT_DIR$/hire-common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hire-pojo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hire-pojo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit-producer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/server-resource-4001/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-company-6001/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-company-6001/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service-resource-4001/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-user-7001/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-user-7001/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-user/src/main/java" charset="UTF-8" />

@@ -29,7 +29,7 @@ public class SendEmailUtils {
         EmailMessage emailMessage = new EmailMessage()
                 .setSenderAddress("DoNotReply@ab03d2b4-ca3b-4d3c-8661-f275ea275acf.azurecomm.net")
                 .setToRecipients(toAddress)
-                .setSubject("测试电子邮件")
+                .setSubject("Your Verify Code")
                 .setBodyPlainText("您的验证码是: " + validCode);
 
 
