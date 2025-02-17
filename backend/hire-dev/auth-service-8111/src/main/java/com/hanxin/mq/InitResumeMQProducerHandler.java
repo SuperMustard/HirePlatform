@@ -50,11 +50,18 @@ public class InitResumeMQProducerHandler {
         }
 
         List<MqLocalMsgRecord> msgRecords = recordService.getBatchLocalMsgRecordList(msgIds);
+        List<String> stillLive = new ArrayList<String>();
         for (MqLocalMsgRecord record: msgRecords) {
+            stillLive.add(record.getId());
             rabbitTemplate.convertAndSend(
                     record.getTargetExchange(),
                     record.getRoutingKey(),
                     record.getMsgContent() + "," + record.getId());
+        }
+        if (stillLive.isEmpty()) {
+            msgIdsThreadLocal.remove();
+        } else {
+            msgIdsThreadLocal.set(stillLive);
         }
     }
 }
