@@ -17,4 +17,6 @@ public interface UsersService extends IService<Users> {
     public Users queryMobileIsExist(String mobile);
 
     public Users createUsers(String email);
+
+    public Users createUsersAndInitResumeMQ(String mobile);
 }

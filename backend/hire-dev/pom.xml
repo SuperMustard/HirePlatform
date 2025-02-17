@@ -16,6 +16,7 @@
         <module>gateway-8000</module>
         <module>auth-service-8111</module>
         <module>service-resource-4001</module>
+        <module>service-work-3001</module>
     </modules>
 
     <properties>
