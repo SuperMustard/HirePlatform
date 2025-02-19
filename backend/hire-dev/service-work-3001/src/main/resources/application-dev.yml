@@ -18,3 +18,32 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.2.201:8848
+  rabbitmq:
+    host: 192.168.2.202
+    port: 5672
+    virtual-host: /
+    username: hanxin
+    password: hanxin
+    publisher-confirm-type: correlated
+    listener:
+     simple:
+       acknowledge-mode: manual
+#        prefetch: 2 # 每次每个消费者从mq中拉取的消息数量，直到手动ack确认后才会继续拉取
+seata:
+    enabled: true
+    tx-service-group: hanxin_tx_group
+    service:
+      vgroup-mapping:
+        hanxin_tx_group: SEATA_GROUP
+      grouplist:
+        SEATA_GROUP: 192.168.2.202:8091
+    config:
+      nacos:
+        server-addr: 192.168.2.201:8848
+        username: nacos
+        password: nacos
+    registry:
+      nacos:
+        server-addr: 192.168.2.201:8848
+        username: nacos
+        password: nacos
