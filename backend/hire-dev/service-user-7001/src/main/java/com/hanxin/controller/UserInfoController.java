@@ -1,53 +1,56 @@
 package com.hanxin.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.google.gson.Gson;
 import com.hanxin.api.intercept.JWTCurrentUserInterceptor;
 import com.hanxin.base.BaseInfoProperties;
 import com.hanxin.pojo.Users;
+import com.hanxin.pojo.bo.ModifyUserBO;
+import com.hanxin.pojo.vo.UsersVO;
+import com.hanxin.result.CustomJSONResult;
 import com.hanxin.service.StuService;
+import com.hanxin.service.UsersService;
+import com.hanxin.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("u")
+@RequestMapping("userinfo")
 @Slf4j
-public class HelloController extends BaseInfoProperties {
+public class UserInfoController extends BaseInfoProperties {
 
     @Autowired
-    private StuService stuService;
+    private UsersService usersService;
 
-    @Value("${server.port}")
-    private String port;
+    @Autowired
+    private JwtUtils jwtUtils;
 
-    @GetMapping("stu")
-    public Object stu() {
-        com.hanxin.pojo.Stu stu = new com.hanxin.pojo.Stu();
+    @PostMapping("modify")
+    public CustomJSONResult modify(@RequestBody ModifyUserBO userBO) {
+        usersService.modifyUserInfo(userBO);
 
-        stu.setAge(18);
-        stu.setName("白雪女王");
+        //return new user info help front end to refresh
+        UsersVO usersVO = getUserInfo(userBO.getUserId());
 
-        stuService.save(stu);
-        log.info("current port is: " + port);
-
-        return "OK!";
+       return CustomJSONResult.ok(usersVO);
     }
 
-    @GetMapping("hello")
-    public Object hello(HttpServletRequest request) {
-        String userJson = request.getHeader(APP_USER_JSON);
-        Users jwtUser = new Gson().fromJson(userJson, Users.class);
-        log.info(jwtUser.toString());
+    private UsersVO getUserInfo(String userId) {
+        // 查询获得用户的最新信息
+        Users latestUser = usersService.getById(userId);
 
-        Users currentUser = JWTCurrentUserInterceptor.currentUser.get();
-        log.info("Current User Interceptor: " + currentUser.toString());
+        // 重新生成并且覆盖原来的token
+        String uToken = jwtUtils.createJWTWithPrefix(new Gson().toJson(latestUser),
+                TOKEN_USER_PREFIX);
 
-        return "Hello User !!! OK!";
+        UsersVO usersVO = new UsersVO();
+        BeanUtils.copyProperties(latestUser, usersVO);
+        usersVO.setUserToken(uToken);
+
+        return usersVO;
     }
 }

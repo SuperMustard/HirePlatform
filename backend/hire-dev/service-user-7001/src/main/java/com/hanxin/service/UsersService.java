@@ -2,6 +2,7 @@ package com.hanxin.service;
 
 import com.hanxin.pojo.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hanxin.pojo.bo.ModifyUserBO;
 
 /**
  * <p>
@@ -11,5 +12,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author hanxin
  * @since 2025-01-09
  */
-public interface UsersService extends IService<Users> {
+public interface UsersService {
+    public void modifyUserInfo(ModifyUserBO userBO);
+
+    public Users getById(String uid);
 }
