@@ -8,10 +8,12 @@ import com.hanxin.exceptions.ExceptionWrapper;
 import com.hanxin.mapper.AdminMapper;
 import com.hanxin.pojo.Admin;
 import com.hanxin.pojo.bo.CreateAdminBO;
+import com.hanxin.pojo.bo.UpdateAdminBO;
 import com.hanxin.result.ResponseStatusEnum;
 import com.hanxin.service.AdminService;
 import com.hanxin.utils.MD5Utils;
 import com.hanxin.utils.PagedGridResult;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,11 +89,25 @@ public class AdminServiceImpl extends BaseInfoProperties implements AdminService
         if (res == 0) ExceptionWrapper.display(ResponseStatusEnum.ADMIN_DELETE_ERROR);
     }
 
+    @Override
+    public Admin getById(String adminId) {
+        return adminMapper.selectById(adminId);
+    }
+
     private Admin getSelfAdmin(String username) {
         Admin admin = adminMapper.selectOne(
                 new QueryWrapper<Admin>()
                         .eq("username", username)
         );
         return admin;
+    }
+
+    @Transactional
+    @Override
+    public void updateAdmin(UpdateAdminBO adminBO) {
+        Admin admin = new Admin();
+        BeanUtils.copyProperties(adminBO, admin);
+        admin.setUpdatedTime(LocalDateTime.now());
+        adminMapper.updateById(admin);
     }
 }

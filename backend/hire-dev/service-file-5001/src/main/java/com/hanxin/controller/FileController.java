@@ -1,17 +1,29 @@
 package com.hanxin.controller;
 
+import com.hanxin.CFR2Config;
+import com.hanxin.CFR2Utils;
 import com.hanxin.MinIOConfig;
 import com.hanxin.MinIOUtils;
+import com.hanxin.exceptions.ExceptionWrapper;
+import com.hanxin.pojo.bo.Base64FileBO;
 import com.hanxin.result.CustomJSONResult;
 import com.hanxin.result.ResponseStatusEnum;
+import com.hanxin.utils.Base64ToFile;
+import com.hanxin.utils.GeneratePathByOS;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.File;
+import java.io.InputStream;
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("file")
@@ -34,7 +46,8 @@ public class FileController {
 
         String newFileName = userId + suffixName;
 
-        String rootPath = "D:\\temp" + File.separator;
+        //String rootPath = "D:\\temp" + File.separator;
+        String rootPath = GeneratePathByOS.getRootPath();
         String filePath = rootPath + File.separator + "face" + File.separator + newFileName;
 
         File newFile = new File(filePath);
@@ -68,13 +81,86 @@ public class FileController {
         }
 
         filename = userId + "/" + filename;
-        MinIOUtils.uploadFile(minIOConfig.getBucketName(), filename, file.getInputStream());
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+            MinIOUtils.uploadFile(minIOConfig.getBucketName(), filename, inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionWrapper.display(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
 
-        String imageUrl =
-                minIOConfig.getFileHost() +
-                "/" +
-                        minIOConfig.getBucketName() +
-                        "/" + filename;
+        String imageUrl = minIOConfig.getFileHost()
+                        + "/"
+                        + minIOConfig.getBucketName()
+                        + "/"
+                        + filename;
         return CustomJSONResult.ok(imageUrl);
     }
+
+    @Autowired
+    private CFR2Config cfr2Config;
+
+    @PostMapping("uploadFace2")
+    public CustomJSONResult uploadFace2(@RequestParam("file") MultipartFile file,
+                                       @RequestParam("userId") String userId,
+                                       HttpServletRequest request) throws Exception{
+        if (StringUtils.isBlank(userId)) {
+            return CustomJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+        }
+
+        String filename = file.getOriginalFilename();
+        if (StringUtils.isBlank(filename)) {
+            return CustomJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+        }
+
+        filename = userId + "/" + filename;
+        InputStream inputStream = null;
+        String imageURL = "";
+        try {
+            inputStream = file.getInputStream();
+            imageURL = CFR2Utils.uploadFile(cfr2Config.getBucketName(), file, filename, inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionWrapper.display(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
+        log.info(imageURL);
+
+        return CustomJSONResult.ok(imageURL);
+    }
+
+    @PostMapping("uploadAdminFace")
+    public CustomJSONResult uploadAdminFace(@RequestBody @Valid Base64FileBO base64FileBO) throws Exception{
+
+        String  base64 = base64FileBO.getBase64File();
+
+        String suffixName = ".png";
+        String uuid = UUID.randomUUID().toString();
+        String objectName = uuid + suffixName;
+
+        String rootPath = GeneratePathByOS.getRootPath();
+        String filePath = rootPath
+                            + File.separator
+                            + "adminFace"
+                            + File.separator
+                            + objectName;
+
+        Base64ToFile.Base64ToFile(base64, filePath);
+
+        MinIOUtils.uploadFile(minIOConfig.getBucketName(), objectName, filePath);
+
+        String imageUrl = minIOConfig.getFileHost()
+                + "/"
+                + minIOConfig.getBucketName()
+                + "/"
+                + objectName;
+
+        return CustomJSONResult.ok(imageUrl);
+    }
+
 }

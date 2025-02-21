@@ -35,6 +35,12 @@
             <artifactId>okhttp</artifactId>
             <version>4.8.1</version>
         </dependency>
+
+        <!-- aws s3 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

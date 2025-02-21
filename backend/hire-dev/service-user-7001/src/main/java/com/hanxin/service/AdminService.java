@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hanxin.pojo.Admin;
 import com.hanxin.pojo.bo.AdminBO;
 import com.hanxin.pojo.bo.CreateAdminBO;
+import com.hanxin.pojo.bo.UpdateAdminBO;
 import com.hanxin.utils.PagedGridResult;
 
 /**
@@ -37,4 +38,8 @@ public interface AdminService {
      * @param username
      */
     public void deleteAdmin(String username);
+
+    public Admin getById(String adminId);
+
+    public void updateAdmin(UpdateAdminBO adminBO);
 }
