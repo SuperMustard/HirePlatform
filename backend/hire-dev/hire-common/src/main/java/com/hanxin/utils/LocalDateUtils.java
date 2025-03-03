@@ -136,6 +136,34 @@ public class LocalDateUtils {
     private static final String SECOND = "second";
 
     /**
+     * 根据ChronoUnit计算两个日期时间之间相隔日期时间
+     *
+     * @param start      开始日期时间
+     * @param end        结束日期时间
+     * @param chronoUnit 日期时间单位
+     * @return long 相隔日期时间
+     */
+    public static long getChronoUnitBetween(LocalDateTime start, LocalDateTime end, ChronoUnit chronoUnit, boolean needABS) {
+        long times = start.until(end, chronoUnit);
+//        return Math.abs(times);
+        return needABS ? Math.abs(times) : times;
+    }
+
+    /**
+     * 根据ChronoUnit计算两个日期之间相隔年数或月数或天数
+     *
+     * @param start      开始日期
+     * @param end        结束日期
+     * @param chronoUnit 日期时间单位,(ChronoUnit.YEARS,ChronoUnit.MONTHS,ChronoUnit.WEEKS,ChronoUnit.DAYS)
+     * @return long 相隔年数或月数或天数
+     */
+    public static long getChronoUnitBetweenDate(LocalDate start, LocalDate end, ChronoUnit chronoUnit, boolean needABS) {
+//        return Math.abs(start.until(end, chronoUnit));
+        long days = start.until(end, chronoUnit);
+        return needABS ? Math.abs(days) : days;
+    }
+
+    /**
      * 获取当前日期和时间字符串.
      *
      * @return String 日期时间字符串，例如 2015-08-11 09:51:53
@@ -289,6 +317,32 @@ public class LocalDateUtils {
      */
     public static String getLastDayOfYearStr() {
         return getLastDayOfYearStr(LocalDateTime.now());
+    }
+
+    /**
+     * 获得明天的日期
+     * @return
+     */
+    public static LocalDate getTomorrow() {
+        return LocalDate.now().plusDays(1); //获取后一天日期
+    }
+
+    /**
+     * 获得昨天的日期
+     * @return
+     */
+    public static LocalDate getYesterday() {
+        return LocalDate.now().minusDays(1); //获取前一天日期
+    }
+
+    /**
+     * 根据时间单位来获得未来的日期时间
+     * @param times
+     * @param chronoUnit
+     * @return
+     */
+    public static LocalDateTime getFuture(LocalDateTime dateTime, long times, ChronoUnit chronoUnit) {
+        return dateTime.plus(times, chronoUnit);
     }
 
     /**

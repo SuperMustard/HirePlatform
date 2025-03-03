@@ -10,6 +10,7 @@ import com.hanxin.result.CustomJSONResult;
 import com.hanxin.result.ResponseStatusEnum;
 import com.hanxin.utils.Base64ToFile;
 import com.hanxin.utils.GeneratePathByOS;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -161,6 +162,77 @@ public class FileController {
                 + objectName;
 
         return CustomJSONResult.ok(imageUrl);
+    }
+
+    @PostMapping("uploadLogo")
+    public CustomJSONResult uploadLogo(@RequestParam("file") MultipartFile file) throws Exception {
+
+        // 获得文件原始名称
+        String filename = file.getOriginalFilename();
+        if (StringUtils.isBlank(filename)) {
+            return CustomJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+        }
+
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+            filename = "company/logo/" + dealFilename(filename);
+            MinIOUtils.uploadFile(minIOConfig.getBucketName(), filename, inputStream);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
+        String imageUrl = MinIOUtils.uploadFile(minIOConfig.getBucketName(),
+                filename,
+                file.getInputStream(),
+                true);
+        return CustomJSONResult.ok(imageUrl);
+    }
+
+    @PostMapping("uploadBizLicense")
+    public CustomJSONResult uploadBizLicense(@RequestParam("file") MultipartFile file) throws Exception {
+
+        // 获得文件原始名称
+        String filename = file.getOriginalFilename();
+        if (StringUtils.isBlank(filename)) {
+            return CustomJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+        }
+
+        @Cleanup
+        InputStream inputStream = file.getInputStream();
+
+        filename = "company/bizLicense/" + dealFilename(filename);
+        String imageUrl = MinIOUtils.uploadFile(minIOConfig.getBucketName(),
+                filename,
+                inputStream,
+                true);
+        return CustomJSONResult.ok(imageUrl);
+    }
+
+    @PostMapping("uploadAuthLetter")
+    public CustomJSONResult uploadAuthLetter(@RequestParam("file") MultipartFile file) throws Exception {
+
+        // 获得文件原始名称
+        String filename = file.getOriginalFilename();
+        if (StringUtils.isBlank(filename)) {
+            return CustomJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+        }
+
+        filename = "company/AuthLetter/" + dealFilename(filename);
+        @Cleanup
+        InputStream inputStream = file.getInputStream();
+        String imageUrl = MinIOUtils.uploadFile(minIOConfig.getBucketName(),
+                filename,
+                inputStream,
+                true);
+        return CustomJSONResult.ok(imageUrl);
+    }
+
+    private String dealFilename(String filename) {
+        String suffixName = filename.substring(filename.lastIndexOf("."));
+        String fName = filename.substring(0, filename.lastIndexOf("."));
+        String uuid = UUID.randomUUID().toString();
+        return fName + "-" + uuid + suffixName;
     }
 
 }

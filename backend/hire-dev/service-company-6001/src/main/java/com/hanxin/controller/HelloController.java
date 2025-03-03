@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("c")
 public class HelloController {
 
-    @GetMapping("company")
+    @GetMapping("Hello")
     public Object company() {
-        return "Hello JSON!";
+        return "Hello Company Service!";
     }
 }

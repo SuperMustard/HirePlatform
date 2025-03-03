@@ -115,6 +115,15 @@ public class RedisOperator {
         redisTemplate.delete(key);
     }
 
+    /**
+     *  redis全量删除缓存
+     * @param key 可以传一个值 或多个
+     */
+    public void allDel(String key) {
+        Set<String> keys = redisTemplate.keys(key + "*");
+        redisTemplate.delete(keys);
+    }
+
     // String（字符串）
 
     /**
