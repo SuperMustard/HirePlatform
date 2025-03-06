@@ -20,4 +20,8 @@ public interface UserInfoMicroServiceFeign {
 
     @PostMapping("/userinfo/get")
     public CustomJSONResult get(@RequestParam("userId") String userId);
+
+    @PostMapping("/userinfo/changeUserToHR")
+    public CustomJSONResult changeUserToHR(
+            @RequestParam("hrUserId") String hrUserId);
 }

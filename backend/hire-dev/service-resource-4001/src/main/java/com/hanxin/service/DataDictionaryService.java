@@ -55,4 +55,11 @@ public interface DataDictionaryService {
      * @return
      */
     public List<DataDictionary> getDataByCode(String typeCode);
+
+    /**
+     * 根据keys查询数据字典列表
+     * @param keys
+     * @return
+     */
+    public List<DataDictionary> getItemsByKeys(String... keys);
 }
